@@ -4,7 +4,8 @@ from rest_framework.viewsets import ModelViewSet ,GenericViewSet
 from rest_framework.filters import SearchFilter,OrderingFilter
 from rest_framework.response import Response
 from rest_framework.pagination import PageNumberPagination
-from rest_framework.mixins import CreateModelMixin
+from rest_framework.mixins import CreateModelMixin,RetrieveModelMixin,DestroyModelMixin
+
 from .serializer import Books_serializer,collection_serializer,Review_Serializer,Cart_Serializer,CartItem_Serializer
 from .models import Books,collection,Review,CartItem,Cart
 from django.shortcuts import get_object_or_404
@@ -51,12 +52,18 @@ class ReviewSet(ModelViewSet):
 
 
     def get_serializer_context(self):
-        return {"app_id" : self.kwargs['app_pk_pk'] }
+        return {"app_id" : self.kwargs['app_pk'] }
 
-class CartSet(ModelViewSet):
+class CartSet(CreateModelMixin,
+                  RetrieveModelMixin,
+                  DestroyModelMixin,
+                  GenericViewSet):
     queryset=Cart.objects.all()
     serializer_class = Cart_Serializer
-
+    def delete(self,request,pk):
+        carts = get_object_or_404(Cart,pk=pk)
+        carts.delete()
+        return Response({"error" :'object cannot be deleted'},status=status.HTTP_405_METHOD_NOT_ALLOWE)
 
 class CartItemSet(ModelViewSet):
     queryset=CartItem.objects.all()
@@ -64,7 +71,5 @@ class CartItemSet(ModelViewSet):
     filter_backends =[OrderingFilter]
     ordering_fields = ['quantity']
 
-    def delete(self,request,pk):
-        carts = get_object_or_404(CartItem,pk=pk)
-        carts.delete()
-        return Response({"error" :'object cannot be deleted'},status=status.HTTP_405_METHOD_NOT_ALLOWE)
+    def get_serializer_context(self):
+        return {"cart_id" : self.kwargs['cart_pk']}    

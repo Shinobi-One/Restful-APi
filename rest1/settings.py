@@ -39,7 +39,8 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'django_filters'
+    'django_filters',
+    'core'
     
 ]
 
@@ -129,3 +130,5 @@ REST_FRAMEWORK = {
     'COERCE_DECIMAL_TO_STRING' : False,
     'DEFAULT_PAGINATION_CLASS' : 'rest_framework.pagination.PageNumberPagination',
     'PaAGE_SIZE': 5 }
+
+AUTH_USER_MODEL = 'core.User'
