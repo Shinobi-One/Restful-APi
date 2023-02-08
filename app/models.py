@@ -21,7 +21,7 @@ class collection(models.Model):
 class Review(models.Model):
     name = models.CharField(max_length=256)
     rate = models.IntegerField()
-    Books = models.ForeignKey(
+    Books_review = models.ForeignKey(
         Books, on_delete=models.CASCADE, related_name='reviews',null=True)
     description =models.TextField()
 
@@ -34,9 +34,6 @@ class Cart(models.Model):
 
 
 class CartItem(models.Model):
-    cart = models.ForeignKey('Cart',on_delete=models.CASCADE,related_name='items')
-    Books = models.ForeignKey('Books',on_delete=models.CASCADE)
-    quantity = models.PositiveSmallIntegerField()
-
-    def __str__(self):
-        return f"{self.id}"    
+    cart = models.ForeignKey('Cart',on_delete=models.CASCADE,related_name='items',null=True)
+    Books = models.ForeignKey('Books',on_delete=models.CASCADE,default=0)
+    quantity = models.PositiveSmallIntegerField(null=True)

@@ -13,7 +13,7 @@ router.register('carts' ,views.CartSet)
 nested_router=routers.NestedDefaultRouter(router , 'app',lookup='app')
 nested_router.register('review',views.ReviewSet ,basename="apps_reviews")
 cart_router = routers.NestedDefaultRouter(router , 'carts',lookup='cart')
-cart_router.register('items',views.CartItemSet)
+cart_router.register('items',views.CartItemSet,basename='cart_items')
 
 
 urlpatterns = router.urls + nested_router.urls + cart_router.urls
