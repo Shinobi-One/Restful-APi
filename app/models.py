@@ -1,6 +1,23 @@
 from django.db import models
 from uuid import uuid4
+from django.conf import settings
 # Create your models here.
+
+class Customer(models.Model):
+    MEMBERSHIP_GOLD ='G'
+    MEMBERSHIP_SILVER ='S'
+    MEMBERSHIP_BRONZE = "B"
+
+    MEMBERSHIP_CHOICES= [
+    (MEMBERSHIP_GOLD ,'Gold'),
+    (MEMBERSHIP_SILVER, 'Silver'),
+    (MEMBERSHIP_BRONZE, 'Bronze')
+
+    ]
+
+    Membership = models.CharField(max_length=1,default=MEMBERSHIP_BRONZE,choices=MEMBERSHIP_CHOICES)
+    user =models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+
 
 class Books(models.Model):
 

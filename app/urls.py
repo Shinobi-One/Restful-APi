@@ -1,5 +1,5 @@
 from django.urls import path
-from . import views
+from app import views
 from rest_framework.routers import SimpleRouter,DefaultRouter
 from rest_framework_nested import routers
 
@@ -8,6 +8,7 @@ router = DefaultRouter()
 router.register('app',views.All_In_One,basename='app')
 router.register('collection' ,views.Collection_Set)
 router.register('carts' ,views.CartSet)
+router.register('customer',views.CustomerViewSets)
 
 
 nested_router=routers.NestedDefaultRouter(router , 'app',lookup='app')

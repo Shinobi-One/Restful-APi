@@ -1,7 +1,7 @@
 # pylint: disable=abstract-method
 from rest_framework import  serializers
 from decimal import Decimal
-from app.models import Books,collection,Review,CartItem,Cart
+from app.models import Books,collection,Review,CartItem,Cart,Customer
 
 class collection_serializer(serializers.ModelSerializer):
     class Meta:
@@ -92,16 +92,7 @@ class UpdateCartItem_Serializer(serializers.ModelSerializer):
         model = CartItem
         fields = ['quantity']
 
-# class CartItem_Serializer(serializers.ModelSerializer):
-#     class Meta:
-#         model = CartItem
-#         fields = ['id','quantity','Books']
-
-
-
-# class Cart_Serializer(serializers.ModelSerializer):
-#     id = serializers.UUIDField(read_only=True)
-#     items = CartItem_Serializer(many=True,read_only=True)
-#     class Meta:
-#         model = Cart
-#         fields = ['id','items']
+class CustomerSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Customer
+        fields = '__all__'

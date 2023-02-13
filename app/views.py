@@ -4,10 +4,10 @@ from rest_framework.viewsets import ModelViewSet ,GenericViewSet
 from rest_framework.filters import SearchFilter,OrderingFilter
 from rest_framework.response import Response
 from rest_framework.pagination import PageNumberPagination
-from rest_framework.mixins import CreateModelMixin,RetrieveModelMixin,DestroyModelMixin
+from rest_framework.mixins import UpdateModelMixin , CreateModelMixin,RetrieveModelMixin,DestroyModelMixin
 
-from .serializer import Books_serializer,collection_serializer,Review_Serializer,Cart_Serializer,CartItem_Serializer,AddCartItem_Serializer,UpdateCartItem_Serializer
-from .models import Books,collection,Review,CartItem,Cart
+from .serializer import Books_serializer,CustomerSerializer,collection_serializer,Review_Serializer,Cart_Serializer,CartItem_Serializer,AddCartItem_Serializer,UpdateCartItem_Serializer
+from .models import Books,collection,Review,CartItem,Cart,Customer
 from django.shortcuts import get_object_or_404
 from django_filters.rest_framework import DjangoFilterBackend
 
@@ -79,4 +79,8 @@ class CartItemSet(ModelViewSet):
         return CartItem_Serializer
 
     def get_serializer_context(self):
-        return {"cart_id" : self.kwargs['cart_pk']}    
+        return {"cart_id" : self.kwargs['cart_pk']}
+class CustomerViewSets(CreateModelMixin,RetrieveModelMixin,
+                      UpdateModelMixin,GenericViewSet):
+    queryset = Customer.objects.all()
+    serializer_class = CustomerSerializer
