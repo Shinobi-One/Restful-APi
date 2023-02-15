@@ -16,7 +16,7 @@ class Customer(models.Model):
     ]
 
     Membership = models.CharField(max_length=1,default=MEMBERSHIP_BRONZE,choices=MEMBERSHIP_CHOICES)
-    user =models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    user =models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE,null=True)
 
 
 class Books(models.Model):
