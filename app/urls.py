@@ -6,7 +6,7 @@ router.register('app',views.All_In_One,basename='app')
 router.register('collection' ,views.Collection_Set)
 router.register('carts' ,views.CartSet)
 router.register('customer',views.CustomerViewSets)
-
+router.register('orders',views.OrderSet,basename='order')
 
 nested_router=routers.NestedDefaultRouter(router , 'app',lookup='app')
 nested_router.register('review',views.ReviewSet ,basename="apps_reviews")

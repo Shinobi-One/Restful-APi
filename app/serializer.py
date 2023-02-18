@@ -1,7 +1,8 @@
 # pylint: disable=abstract-method
 from rest_framework import  serializers
 from decimal import Decimal
-from app.models import Books,collection,Review,CartItem,Cart,Customer
+from app.models import Books,collection,Review,CartItem,Cart,Customer,Order,OrderItem
+from django.db import transaction
 
 class collection_serializer(serializers.ModelSerializer):
     class Meta:
@@ -9,7 +10,7 @@ class collection_serializer(serializers.ModelSerializer):
         fields = ['id','detail','books']
 
 
-class Books_serializer(serializers.ModelSerializer):
+class Books_Serializer(serializers.ModelSerializer):
     class Meta:
         model = Books
         fields = '__all__'
@@ -34,7 +35,7 @@ class Review_Serializer(serializers.ModelSerializer):
 class SimpleBookSerializer(serializers.ModelSerializer):
     class Meta :
         model = Books
-        fields =['id','description']
+        fields ="__all__"
 
 
 
@@ -97,3 +98,39 @@ class CustomerSerializer(serializers.ModelSerializer):
     class Meta:
         model = Customer
         fields = '__all__'
+
+class OrderItem_Serializer(serializers.ModelSerializer):
+    Books = Books_Serializer()
+    class Meta:
+        model = OrderItem
+        fields = '__all__'
+        
+class OrderSerializer(serializers.ModelSerializer):
+    items = OrderItem_Serializer(many=True)
+    class Meta:
+        model = Order
+        fields = ['id','customer','payment_status','placed_at','items']
+        
+class CreateOrderSerializer(serializers.Serializer):
+    cart_id = serializers.UUIDField()
+    
+    
+    def save(self, **kwargs):
+        with transaction.atomic():
+            cart_id=  self.validated_data['cart_id']
+            user_id=  self.context['user_id']
+            
+            (customer,created) = Customer.objects.get_or_create(user_id = user_id)
+            order=Order.objects.create(customer=customer)
+            
+            cart_item = CartItem.objects.select_related('Books').filter(cart_id= cart_id)
+            items = [
+                OrderItem(
+                    order =order,
+                    Books =item.Books,
+                    quantity=item.quantity
+                    ) for item in cart_item
+                ]
+            Order.objects.bulk_create(items)
+            
+            Cart.objects.filter(pk=cart_id).delete()
